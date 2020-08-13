@@ -2,19 +2,23 @@
   <form novalidate v-submit="doSubmit">
     <div class="row">
       <label>姓名</label>
-      <ep-input v-model="personName"></ep-input>
+      <ep-input v-model="params.personName" v-valid-required></ep-input>
+    </div>
+    <div class="row">
+      <label>备注</label>
+      <ep-input v-model="params.remark" v-valid-required></ep-input>
     </div>
     <div class="row">
       <label>出生年月</label>
-      <ep-calendar v-model="birthDate"></ep-calendar>
+      <ep-calendar v-model="params.birthDate"></ep-calendar>
     </div>
     <div class="row">
       <label>国籍</label>
-      <ep-select></ep-select>
+      <ep-select v-model="params.nation" :list="selectList.nations"></ep-select>
     </div>
     <div class="row">
       <label>是否自贸区</label>
-      <ep-radio></ep-radio>
+      <ep-radio v-model="params.isFTA"></ep-radio>
     </div>
     <div class="btn-list">
       <input type="button" @click="doReset()" value="重置" class="btn btn-reset" />
@@ -26,14 +30,42 @@
 export default {
   data() {
     return {
-      personName: "阿猫",
-      birthDate: "19491001",
+      params: {
+        personName: "可达鸭",
+        remark: "红烧好吃",
+        birthDate: "20070701",
+        nation: "1",
+        isFTA: false,
+      },
+      selectList: {
+        nations: {
+          1: "A国",
+          2: "B国",
+          3: "C国",
+          4: "D国",
+          5: "E国",
+          6: "F国",
+          7: "G国",
+        },
+      },
     };
   },
   methods: {
     // 表单提交方法
     doSubmit() {
-      console.warn("表单提交方法触发了");
+      this.$router.push({
+        // 第一种方式
+        // path: "/output",
+        // query:{
+        //   paramsData:this.params
+        // }
+
+        // 第二种方式
+        name: "output",
+        params: {
+          paramsData: this.params,
+        },
+      });
     },
 
     // 重置方法
@@ -47,6 +79,9 @@ export default {
 form {
   width: 295px;
   padding: 10px 0;
+  &.ep-invalid div.btn-list > .btn.btn-submit {
+    background-color: red;
+  }
   div {
     &.row {
       & > label {
